@@ -28,11 +28,15 @@ pip install -r requirements.txt
 
 1. Run this script from command line without arguments to use the default keywords:
 ```
-python script.py
+python pic-crawler.py
 ```
 2. To use custom keywords, pass them as command line arguments, separated by spaces:
 ```  
-python script.py custom_keyword1 custom_keyword2
+python pic-crawler.py custom_keyword1 custom_keyword2
+```
+3. To specify the number of rounds, use the --num_rounds argument:
+```
+python pic-crawler.py --num_rounds 50 custom_keyword1 custom_keyword2
 ```
 
 ## Contributing
