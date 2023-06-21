@@ -17,36 +17,37 @@ crawler_lib.run(url,keyword,headless=headless,round=round)
 
 """
 from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
 import time
 import requests
 import os
 from catch_image import CatchImage
 
+
 class GoogleCatchImage(CatchImage):
     def __init__(self):
         return
-    
-    def run(self,url,keyword,headless=False,round=2):
-        self.connect_page(url,headless)
-        self.download_images(keyword,round)
+
+    def run(self, url, keyword, headless=False, round=2):
+        self.connect_page(url, headless)
+        self.download_images(keyword, round)
         self.close()
 
-    def connect_page(self,url,bool_headless):
+    def connect_page(self, url, bool_headless):
+        options = webdriver.ChromeOptions()
         if bool_headless:
-            options = webdriver.ChromeOptions()
             options.add_argument('--headless')
-            self.driver = webdriver.Chrome(options=options)
-            self.driver.get(url)
-        else:
-            self.driver = webdriver.Chrome()
-            self.driver.get(url)
-    
-    def download_images(self,keyword,round):
+        self.driver = webdriver.Chrome(
+            ChromeDriverManager().install(), options=options)
+        self.driver.get(url)
+
+    def download_images(self, keyword, round):
         picpath = './data/'+keyword
-        if not os.path.exists(picpath): os.makedirs(picpath)
+        if not os.path.exists(picpath):
+            os.makedirs(picpath)
         img_url_dic = []
 
-        count = 0 
+        count = 0
         pos = 0
         for i in range(round):
             pos += 500
@@ -54,17 +55,17 @@ class GoogleCatchImage(CatchImage):
             self.driver.execute_script(js)
             time.sleep(1)
 
-            #catch "img" label
+            # catch "img" label
             img_elements = self.driver.find_elements_by_tag_name('img')
-            
+
             for img_element in img_elements:
                 img_url = img_element.get_attribute('src')
                 # insinstance(img_url,str) -> make sure type is str
                 # len(img_url)<=200 -> url too long is not image
                 # 'images' in img_url -> filter google logo
                 # img_url not in img_url_dic -> make sure image not to download repeatly
-                if isinstance(img_url, str) and len(img_url)<=200 and 'images' in img_url and img_url not in img_url_dic:
-                    #download picture to local
+                if isinstance(img_url, str) and len(img_url) <= 200 and 'images' in img_url and img_url not in img_url_dic:
+                    # download picture to local
                     try:
                         img_url_dic.append(img_url)
                         filename = picpath+"/" + str(count) + ".jpg"
@@ -74,11 +75,11 @@ class GoogleCatchImage(CatchImage):
                             f.close()
                         count += 1
                         print('this is '+str(count)+'st img')
-                        
+
                         time.sleep(0.2)
                     except:
                         print('failure')
-        
+
     def close(self):
         try:
             self.driver.close()
