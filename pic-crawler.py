@@ -32,7 +32,7 @@ if __name__ == '__main__':
         description='Crawl Google Images based on keywords.')
     parser.add_argument('keywords', metavar='K', type=str, nargs='*',
                         help='keywords to search for')
-    parser.add_argument('--num_rounds', metavar='N', type=int, default=100,
+    parser.add_argument('--num_rounds', metavar='N', type=int, default=45,
                         help='number of rounds to perform for each keyword')
 
     args = parser.parse_args()
